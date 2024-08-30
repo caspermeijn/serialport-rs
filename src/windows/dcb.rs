@@ -1,11 +1,11 @@
 use std::mem::MaybeUninit;
 use winapi::ctypes::c_char;
-use winapi::shared::minwindef::{DWORD, FALSE, TRUE};
-use winapi::um::commapi::{GetCommState, SetCommState};
-use winapi::um::winbase::{
-    DCB, DTR_CONTROL_DISABLE, EVENPARITY, NOPARITY, ODDPARITY, ONESTOPBIT, TWOSTOPBITS,
+use windows_sys::Win32::Foundation::{CloseHandle, DuplicateHandle, INVALID_HANDLE_VALUE, GENERIC_READ, GENERIC_WRITE, HANDLE, DUPLICATE_SAME_ACCESS, TRUE, FALSE};
+use windows_sys::Win32::Devices::Communication::{GetCommState, SetCommState};
+use windows_sys::Win32::Devices::Communication::{
+    DCB, EVENPARITY, NOPARITY, ODDPARITY, ONESTOPBIT, TWOSTOPBITS,
 };
-use winapi::um::winnt::HANDLE;
+use windows_sys::Win32::System::WindowsProgramming::DTR_CONTROL_DISABLE;
 
 use crate::{DataBits, FlowControl, Parity, Result, StopBits};
 
@@ -67,7 +67,7 @@ pub(crate) fn set_dcb(handle: HANDLE, mut dcb: DCB) -> Result<()> {
 }
 
 pub(crate) fn set_baud_rate(dcb: &mut DCB, baud_rate: u32) {
-    dcb.BaudRate = baud_rate as DWORD;
+    dcb.BaudRate = baud_rate;
 }
 
 pub(crate) fn set_data_bits(dcb: &mut DCB, data_bits: DataBits) {

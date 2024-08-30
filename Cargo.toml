@@ -34,6 +34,18 @@ features = [
     "minwindef", "ntdef", "setupapi", "winbase", "winerror", "winnt",
 ]
 
+[target."cfg(windows)".dependencies.windows-sys]
+version = "0.59"
+features = [
+    "Win32_Devices_Communication",
+    "Win32_Storage_FileSystem",
+    "Win32_Security",
+    "Win32_System_IO",
+    "Win32_System_Threading",
+    "Win32_System_SystemServices",
+    "Win32_System_WindowsProgramming",
+]
+
 [dependencies]
 cfg-if = "1.0.0"
 scopeguard = "1.1"
