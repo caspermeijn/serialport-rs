@@ -3,12 +3,18 @@ use std::os::windows::prelude::*;
 use std::time::Duration;
 use std::{io, ptr};
 
-use winapi::shared::minwindef::*;
-use winapi::um::commapi::*;
-use winapi::um::fileapi::*;
-use winapi::um::handleapi::*;
+use winapi::shared::minwindef::{DWORD, LPVOID, TRUE};
+use winapi::um::commapi::{
+    ClearCommBreak, ClearCommError, EscapeCommFunction, GetCommModemStatus, PurgeComm,
+    SetCommBreak, SetCommTimeouts,
+};
+use winapi::um::fileapi::{CreateFileW, FlushFileBuffers, ReadFile, WriteFile, OPEN_EXISTING};
+use winapi::um::handleapi::{CloseHandle, DuplicateHandle, INVALID_HANDLE_VALUE};
 use winapi::um::processthreadsapi::GetCurrentProcess;
-use winapi::um::winbase::*;
+use winapi::um::winbase::{
+    CLRDTR, CLRRTS, COMMTIMEOUTS, MS_CTS_ON, MS_DSR_ON, MS_RING_ON, MS_RLSD_ON, PURGE_RXABORT,
+    PURGE_RXCLEAR, PURGE_TXABORT, PURGE_TXCLEAR, SETDTR, SETRTS,
+};
 use winapi::um::winnt::{
     DUPLICATE_SAME_ACCESS, FILE_ATTRIBUTE_NORMAL, GENERIC_READ, GENERIC_WRITE, HANDLE, MAXDWORD,
 };

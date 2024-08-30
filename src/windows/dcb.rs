@@ -1,7 +1,10 @@
 use std::mem::MaybeUninit;
-use winapi::shared::minwindef::*;
-use winapi::um::commapi::*;
-use winapi::um::winbase::*;
+use winapi::ctypes::c_char;
+use winapi::shared::minwindef::{DWORD, FALSE, TRUE};
+use winapi::um::commapi::{GetCommState, SetCommState};
+use winapi::um::winbase::{
+    DCB, DTR_CONTROL_DISABLE, EVENPARITY, NOPARITY, ODDPARITY, ONESTOPBIT, TWOSTOPBITS,
+};
 use winapi::um::winnt::HANDLE;
 
 use crate::{DataBits, FlowControl, Parity, Result, StopBits};
@@ -31,7 +34,7 @@ pub(crate) fn init(dcb: &mut DCB) {
     // dcb.StopBits
     dcb.XonChar = 17;
     dcb.XoffChar = 19;
-    dcb.ErrorChar = '\0' as winapi::ctypes::c_char;
+    dcb.ErrorChar = '\0' as c_char;
     dcb.EofChar = 26;
     // dcb.EvtChar
     // always true for communications resources

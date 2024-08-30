@@ -2,7 +2,8 @@ use std::io;
 use std::ptr;
 
 use winapi::shared::minwindef::DWORD;
-use winapi::shared::winerror::*;
+use winapi::shared::winerror::ERROR_ACCESS_DENIED;
+use winapi::shared::winerror::{ERROR_FILE_NOT_FOUND, ERROR_PATH_NOT_FOUND};
 use winapi::um::errhandlingapi::GetLastError;
 use winapi::um::winbase::{
     FormatMessageW, FORMAT_MESSAGE_FROM_SYSTEM, FORMAT_MESSAGE_IGNORE_INSERTS,

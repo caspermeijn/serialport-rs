@@ -2,14 +2,25 @@ use std::collections::HashSet;
 use std::{mem, ptr};
 
 use winapi::ctypes::c_void;
-use winapi::shared::guiddef::*;
-use winapi::shared::minwindef::*;
-use winapi::shared::winerror::*;
-use winapi::um::cfgmgr32::*;
+use winapi::shared::guiddef::GUID;
+use winapi::shared::minwindef::{DWORD, FALSE, FILETIME, MAX_PATH, PBYTE, ULONG};
+use winapi::shared::winerror::{FAILED, SUCCEEDED};
+use winapi::um::cfgmgr32::{
+    CM_Get_DevNode_Status, CM_Get_Device_IDW, CM_Get_Parent, CR_SUCCESS, MAX_DEVICE_ID_LEN,
+};
 use winapi::um::cguid::GUID_NULL;
-use winapi::um::setupapi::*;
+use winapi::um::handleapi::INVALID_HANDLE_VALUE;
+use winapi::um::setupapi::{
+    SetupDiClassGuidsFromNameW, SetupDiDestroyDeviceInfoList, SetupDiEnumDeviceInfo,
+    SetupDiGetClassDevsW, SetupDiGetDeviceInstanceIdW, SetupDiGetDeviceRegistryPropertyW,
+    SetupDiOpenDevRegKey, DICS_FLAG_GLOBAL, DIGCF_PRESENT, DIREG_DEV, HDEVINFO, SPDRP_FRIENDLYNAME,
+    SPDRP_HARDWAREID, SPDRP_MFG, SP_DEVINFO_DATA,
+};
 use winapi::um::winnt::{KEY_READ, REG_SZ};
-use winapi::um::winreg::*;
+use winapi::um::winreg::{
+    RegCloseKey, RegEnumValueW, RegOpenKeyExW, RegQueryInfoKeyW, RegQueryValueExW,
+    HKEY_LOCAL_MACHINE,
+};
 
 use crate::{Error, ErrorKind, Result, SerialPortInfo, SerialPortType, UsbPortInfo};
 
@@ -339,7 +350,7 @@ impl PortDevice {
             )
         };
 
-        if hkey as *mut c_void == winapi::um::handleapi::INVALID_HANDLE_VALUE {
+        if hkey as *mut c_void == INVALID_HANDLE_VALUE {
             // failed to open registry key. Return empty string as the failure case
             return String::new();
         }
